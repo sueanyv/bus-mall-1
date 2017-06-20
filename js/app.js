@@ -86,7 +86,7 @@ function setup () {
 function eventListener (){
   productImageParent.addEventListener('click', function (event){
     var answer = event.target.getAttribute('id');
-    var clickedObject = switchToArray(answer, clickedProducts, displayedProducts);
+    var clickedObject = switchArray(answer, clickedProducts, displayedProducts);
     clickedObject.countClicked();
     console.log(clickedObject.description + ' CLICKED: ' + clickedObject.clicked);
     removeChildren();
@@ -102,7 +102,7 @@ function render(productObj){
   image.setAttribute('width', '300px');
   image.setAttribute('height', '300px');
   productImageParent.appendChild(image);
-  switchToArray(productObj, displayedProducts, products);
+  switchArray(productObj, displayedProducts, products);
 }
 
 // randomly generates product from the products array
@@ -114,7 +114,7 @@ function generateProduct(){
 }
 
 // to prevent duplication when generating product
-function switchToArray(productObj, toArray, fromArray){
+function switchArray(productObj, toArray, fromArray){
   var index = fromArray.indexOf(productObj);
   var array = fromArray.splice(index, 1);
   toArray.push(array[0]);
