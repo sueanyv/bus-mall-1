@@ -2,6 +2,7 @@
 
 // array of product objects
 var products = [];
+var displayedProducts = [];
 
 var productImageParent = document.getElementById('productImage');
 
@@ -36,20 +37,38 @@ new Product('Dancing Octopus Limb USB', 'usb.gif').pushToArray();
 new Product('Exercise in Futility Watering Can', 'water-can.jpg' ).pushToArray();
 new Product('Sobriety Encouragement Wine Glass', 'wine-glass.jpg').pushToArray();
 
-console.log(products);
-console.log(randNum());
-
 function render(products){
-  var imagePath = products[randNum()].path;
+  var random = randNum();
+  var imagePath = products[random].path;
   var image = document.createElement('img');
   image.setAttribute('src', 'images/' + imagePath);
+  image.setAttribute('width', '300px');
+  image.setAttribute('height', '300px');
   productImageParent.appendChild(image);
+  removeFromArray(random);
 }
 
 render(products);
 render(products);
 render(products);
+console.log(displayedProducts);
+resetArrays();
+
+console.log(products);
+console.log(randNum());
+console.log(displayedProducts);
 
 function randNum(){
   return Math.floor(Math.random() * products.length);
+}
+
+function removeFromArray(random){
+  displayedProducts.push(products.splice(random, 1));
+}
+
+function resetArrays(){
+  displayedProducts.forEach(function(product){
+    products.push(product);
+  });
+  displayedProducts = [];
 }
