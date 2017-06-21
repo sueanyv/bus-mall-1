@@ -39,8 +39,6 @@ Product.prototype.countDisplayed = function (){
 };
 Product.prototype.countClicked = function (){
   this.clicked ++;
-  // did this work?
-  console.log(this.clicked);
 };
 
 // CREATE PRODUCT ARRAY OF OBJECTS =====
@@ -86,7 +84,18 @@ function eventListener (){
     var answer = event.target.getAttribute('id');
     var index = getClickedObjectIndex(answer, displayedProducts);
     displayedProducts[index].countClicked();
+
+    // DELETEME did this work?
+    console.log(displayedProducts[index].description + ': ' + displayedProducts[index].clicked);
+
     clickedProducts.push(displayedProducts[index]);
+
+    // DELETEME array check
+    console.log(displayedProducts);
+    console.log(products);
+    console.log(clickedProducts);
+
+    resetArrays();
     removeChildren();
     setup();
   });
