@@ -7,8 +7,7 @@
 
 // VAR INIT =====
 
-// array of product objects
-var products = [];
+
 // to prevent duplication in same render
 var displayedProducts = [];
 // to track clicked products
@@ -26,7 +25,6 @@ function Product(displayName, path){
   this.displayName = displayName;
   this.path = path;
   this.description = this.path.slice(0, this.path.length - 4);
-  // TODO: track displayed and track clicked
   this.displayed = 0;
   this.clicked = 0;
 }
@@ -41,29 +39,33 @@ Product.prototype.countDisplayed = function (){
 };
 Product.prototype.countClicked = function (){
   this.clicked ++;
+  // did this work?
+  console.log(this.clicked);
 };
 
-// CREATE PRODUCT OBJECTS =====
-new Product('Rolling Familiar Robot Bag', 'bag.jpg').pushToArray();
-new Product('Convenient Banana Slicer', 'banana.jpg').pushToArray();
-new Product('Ultimate Poopbook Accessory', 'bathroom.jpg').pushToArray();
-new Product('Guaranteed Wet Toes Boots', 'boots.jpg').pushToArray();
-new Product('Ultimate Breakfast Maker', 'breakfast.jpg').pushToArray();
-new Product('Meatball Flavored Bubblegum', 'bubblegum.jpg').pushToArray();
-new Product('The Most Uncomfortable Chair', 'chair.jpg').pushToArray();
-new Product('Adorable Lord of Darkness Action Figure Complete With Victim', 'cthulhu.jpg').pushToArray();
-new Product('Bark to Quack Transformer Accessory', 'dog-duck.jpg').pushToArray();
-new Product('Canned Dragon Meat', 'dragon.jpg').pushToArray();
-new Product('Utensi-Pen The Ultimate Multitasking Tool', 'pen.jpg').pushToArray();
-new Product('Animal Powered Debris Removal System', 'pet-sweep.jpg').pushToArray();
-new Product('Pizza Scissors', 'scissors.jpg').pushToArray();
-new Product('Snuggle Shark', 'shark.jpg').pushToArray();
-new Product('Baby Powered Debris Removal System', 'sweep.png').pushToArray();
-new Product('Snuggle TaunTaun', 'tauntaun.jpg').pushToArray();
-new Product('Canned Unicorn Meat', 'unicorn.jpg').pushToArray();
-new Product('Dancing Octopus Limb USB', 'usb.gif').pushToArray();
-new Product('Exercise in Futility Watering Can', 'water-can.jpg' ).pushToArray();
-new Product('Sobriety Encouragement Wine Glass', 'wine-glass.jpg').pushToArray();
+// CREATE PRODUCT ARRAY OF OBJECTS =====
+var products = [
+  new Product('Rolling Familiar Robot Bag', 'bag.jpg'),
+  new Product('Convenient Banana Slicer', 'banana.jpg'),
+  new Product('Ultimate Poopbook Accessory', 'bathroom.jpg'),
+  new Product('Guaranteed Wet Toes Boots', 'boots.jpg'),
+  new Product('Ultimate Breakfast Maker', 'breakfast.jpg'),
+  new Product('Meatball Flavored Bubblegum', 'bubblegum.jpg'),
+  new Product('The Most Uncomfortable Chair', 'chair.jpg'),
+  new Product('Adorable Lord of Darkness Action Figure Complete With Victim', 'cthulhu.jpg'),
+  new Product('Bark to Quack Transformer Accessory', 'dog-duck.jpg'),
+  new Product('Canned Dragon Meat', 'dragon.jpg'),
+  new Product('Utensi-Pen The Ultimate Multitasking Tool', 'pen.jpg'),
+  new Product('Animal Powered Debris Removal System', 'pet-sweep.jpg'),
+  new Product('Pizza Scissors', 'scissors.jpg'),
+  new Product('Snuggle Shark', 'shark.jpg'),
+  new Product('Baby Powered Debris Removal System', 'sweep.png'),
+  new Product('Snuggle TaunTaun', 'tauntaun.jpg'),
+  new Product('Canned Unicorn Meat', 'unicorn.jpg'),
+  new Product('Dancing Octopus Limb USB', 'usb.gif'),
+  new Product('Exercise in Futility Watering Can', 'water-can.jpg' ),
+  new Product('Sobriety Encouragement Wine Glass', 'wine-glass.jpg')
+];
 
 // MAIN =====
 setup();
@@ -77,20 +79,15 @@ function setup () {
   render(centerProduct);
   rightProduct = generateProduct();
   render(rightProduct);
-
-  console.log('products ' + products.length);
-  console.log('clicked ' + clickedProducts.length);
-  console.log('displayed ' + displayedProducts.length);
 }
 
 function eventListener (){
   productImageParent.addEventListener('click', function (event){
     var answer = event.target.getAttribute('id');
-    var clickedObject = switchArray(answer, clickedProducts, displayedProducts);
-    clickedObject.countClicked();
-    console.log(clickedObject.description + ' CLICKED: ' + clickedObject.clicked);
+    var index = getClickedObjectIndex(answer, displayedProducts);
+    displayedProducts[index].countClicked();
+    clickedProducts.push(displayedProducts[index]);
     removeChildren();
-    resetArrays(displayedProducts, products);
     setup();
   });
 }
@@ -114,11 +111,13 @@ function generateProduct(){
 }
 
 // to prevent duplication when generating product
+// ***
 function switchArray(productObj, toArray, fromArray){
   var index = fromArray.indexOf(productObj);
   var array = fromArray.splice(index, 1);
-  toArray.push(array[0]);
-  return(array[0]);
+  var object = array[0];
+  toArray.push(object);
+  return(object);
 }
 
 // to allow regeneration of displayed products
@@ -134,4 +133,15 @@ function removeChildren(){
   while (productImageParent.hasChildNodes()){
     productImageParent.removeChild(productImageParent.firstChild);
   }
+}
+
+// to compare array of clicked object names
+function getClickedObjectIndex(answer, displayedProducts){
+  var index;
+  displayedProducts.forEach(function(product){
+    if (product.description === answer){
+      index = displayedProducts.indexOf(product);
+    }
+  });
+  return index;
 }
