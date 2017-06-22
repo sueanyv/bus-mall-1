@@ -1,8 +1,8 @@
 'use strict';
 
-// TODO: Prevent consecutive duplication
 // TODO: Turn off event listeners after 25 selections
 // TODO: display list of products with votes received
+// TODO: Prevent consecutive duplication
 
 // FYI count displayed and count clicked is working
 
@@ -17,6 +17,9 @@ var clickedProducts = [];
 var leftProduct;
 var centerProduct;
 var rightProduct;
+
+var numClicks = 0;
+var maxClick = 25;
 
 var productImageParent = document.getElementById('productImage');
 
@@ -79,11 +82,17 @@ function setup() {
   render(rightProduct);
 }
 
-function eventListener() {
-  productImageParent.addEventListener('click', eventHandler);
+function eventListener(){
+  productImageParent.addEventListener('click', onClick);
 }
 
-function eventHandler(event) {
+
+function onClick(event) {
+  numClicks++;
+  console.log('numClicks: ' + numClicks);
+  if(numClicks >= maxClick){
+    productImageParent.removeEventListener('click', onClick);
+  }
   var answer = event.target.getAttribute('id');
   var index = getClickedObjectIndex(answer, displayedProducts);
   displayedProducts[index].countClicked();
