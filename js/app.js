@@ -1,12 +1,12 @@
 'use strict';
 
-// TODO: Fix duplication of images displayed immediately before
+// TODO: Prevent consecutive duplication
 // TODO: Turn off event listeners after 25 selections
-// TODO rel: Allow for 25 selections because there are only 20 images and each click subtracts from the whole
 // TODO: display list of products with votes received
 
-// VAR INIT =====
+// FYI count displayed and count clicked is working
 
+// VAR INIT =====
 
 // to prevent duplication in same render
 var displayedProducts = [];
@@ -21,7 +21,7 @@ var rightProduct;
 var productImageParent = document.getElementById('productImage');
 
 // OBJECT CONSTRUCTOR =====
-function Product(displayName, path){
+function Product(displayName, path) {
   this.displayName = displayName;
   this.path = path;
   this.description = this.path.slice(0, this.path.length - 4);
@@ -70,7 +70,7 @@ setup();
 eventListener();
 
 // FUNCTIONS =====
-function setup () {
+function setup() {
   leftProduct = generateProduct();
   render(leftProduct);
   centerProduct = generateProduct();
@@ -79,29 +79,31 @@ function setup () {
   render(rightProduct);
 }
 
-function eventListener (){
-  productImageParent.addEventListener('click', function (event){
-    var answer = event.target.getAttribute('id');
-    var index = getClickedObjectIndex(answer, displayedProducts);
-    displayedProducts[index].countClicked();
-
-    // DELETEME did this work?
-    console.log(displayedProducts[index].description + ': ' + displayedProducts[index].clicked);
-
-    clickedProducts.push(displayedProducts[index]);
-
-    // DELETEME array check
-    console.log(displayedProducts);
-    console.log(products);
-    console.log(clickedProducts);
-
-    resetArrays();
-    removeChildren();
-    setup();
-  });
+function eventListener() {
+  productImageParent.addEventListener('click', eventHandler);
 }
 
-function render(productObj){
+function eventHandler(event) {
+  var answer = event.target.getAttribute('id');
+  var index = getClickedObjectIndex(answer, displayedProducts);
+  displayedProducts[index].countClicked();
+
+  // DELETEME did this work?
+  console.log(displayedProducts[index].description + ': ' + displayedProducts[index].clicked);
+
+  clickedProducts.push(displayedProducts[index]);
+
+  // DELETEME array check
+  console.log(displayedProducts);
+  console.log(products);
+  console.log(clickedProducts);
+
+  resetArrays();
+  removeChildren();
+  setup();
+}
+
+function render(productObj) {
   var image = document.createElement('img');
   image.setAttribute('src', 'images/' + productObj.path);
   image.setAttribute('id', productObj.description);
@@ -120,7 +122,6 @@ function generateProduct(){
 }
 
 // to prevent duplication when generating product
-// ***
 function switchArray(productObj, toArray, fromArray){
   var index = fromArray.indexOf(productObj);
   var array = fromArray.splice(index, 1);
