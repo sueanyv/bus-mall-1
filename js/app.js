@@ -1,9 +1,6 @@
 'use strict';
 
-// TODO: display list of products with votes received
 // TODO: Prevent consecutive duplication
-
-// FYI count displayed and count clicked is working
 
 // VAR INIT =====
 
@@ -48,19 +45,19 @@ Product.prototype.countClicked = function (){
 var products = [
   new Product('Rolling Familiar Robot Bag', 'bag.jpg'),
   new Product('Convenient Banana Slicer', 'banana.jpg'),
-  new Product('Ultimate Poopbook Accessory', 'bathroom.jpg'),
+  new Product('Ultimate Poopbooking Bathroom Fixture', 'bathroom.jpg'),
   new Product('Guaranteed Wet Toes Boots', 'boots.jpg'),
   new Product('Ultimate Breakfast Maker', 'breakfast.jpg'),
   new Product('Meatball Flavored Bubblegum', 'bubblegum.jpg'),
   new Product('The Most Uncomfortable Chair', 'chair.jpg'),
-  new Product('Adorable Lord of Darkness Action Figure Complete With Victim', 'cthulhu.jpg'),
-  new Product('Bark to Quack Transformer Accessory', 'dog-duck.jpg'),
+  new Product('Adorable Cthulhu Action Figure Complete With Victim', 'cthulhu.jpg'),
+  new Product('Dog to Duck Transformer Accessory', 'dog-duck.jpg'),
   new Product('Canned Dragon Meat', 'dragon.jpg'),
   new Product('Utensi-Pen The Ultimate Multitasking Tool', 'pen.jpg'),
-  new Product('Animal Powered Debris Removal System', 'pet-sweep.jpg'),
+  new Product('Pet Powered Debris Removal System', 'pet-sweep.jpg'),
   new Product('Pizza Scissors', 'scissors.jpg'),
   new Product('Snuggle Shark', 'shark.jpg'),
-  new Product('Baby Powered Debris Removal System', 'sweep.png'),
+  new Product('Baby Powered Sweep System', 'sweep.png'),
   new Product('Snuggle TaunTaun', 'tauntaun.jpg'),
   new Product('Canned Unicorn Meat', 'unicorn.jpg'),
   new Product('Dancing Octopus Limb USB', 'usb.gif'),
@@ -69,12 +66,13 @@ var products = [
 ];
 
 // MAIN =====
+removeChildren(productListParent);
 setup();
 eventListener();
-displayList();
 
 // FUNCTIONS =====
 function setup() {
+  resetArrays();
   leftProduct = generateProduct();
   render(leftProduct);
   centerProduct = generateProduct();
@@ -84,35 +82,26 @@ function setup() {
 }
 
 function eventListener(){
-  productImageParent.addEventListener('click', onClick);
+  productImageParent.addEventListener('click', eventHandler, true);
 }
 
-
-function onClick(event) {
+function eventHandler(event) {
   numClick ++;
-  //TODO: "countClicked of undefined" error
-  if(numClick >= maxClick){
-    productImageParent.removeEventListener('click', onClick);
-    displayList();
-  }
 
   var answer = event.target.getAttribute('id');
   var index = getClickedObjectIndex(answer, displayedProducts);
   displayedProducts[index].countClicked();
 
-  // DELETEME did this work?
-  console.log(displayedProducts[index].description + ': ' + displayedProducts[index].clicked);
-
   clickedProducts.push(displayedProducts[index]);
 
-  // DELETEME array check
-  console.log(displayedProducts);
-  console.log(products);
-  console.log(clickedProducts);
-
-  resetArrays();
-  removeChildren();
+  removeChildren(productImageParent);
   setup();
+
+  if(maxClick <= numClick){
+    productImageParent.removeEventListener('click', eventHandler, true);
+    displayVoteList();
+    return;
+  }
 }
 
 function render(productObj) {
@@ -122,7 +111,15 @@ function render(productObj) {
   image.setAttribute('width', '300px');
   image.setAttribute('height', '300px');
   productImageParent.appendChild(image);
-  switchArray(productObj, displayedProducts, products);
+  switchToDisplayArray(productObj, displayedProducts, products);
+  // DELETEME check functionality
+  for(var i = 0; i < displayedProducts.length; i++) {
+    console.log('Displayed: ' + displayedProducts[i].description);
+  }
+  for(i = 0; i < products.length; i++){
+    console.log('Products: ' + products[i].description);
+  }
+
 }
 
 // randomly generates product from the products array
@@ -134,11 +131,11 @@ function generateProduct(){
 }
 
 // to prevent duplication when generating product
-function switchArray(productObj, toArray, fromArray){
-  var index = fromArray.indexOf(productObj);
-  var array = fromArray.splice(index, 1);
+function switchToDisplayArray(productObj, displayedProducts, products){
+  var index = products.indexOf(productObj);
+  var array = products.splice(index, 1);
   var object = array[0];
-  toArray.push(object);
+  displayedProducts.push(object);
   return(object);
 }
 
@@ -151,9 +148,9 @@ function resetArrays(){
 }
 
 // to remove children and set up render of new images
-function removeChildren(){
-  while (productImageParent.hasChildNodes()){
-    productImageParent.removeChild(productImageParent.firstChild);
+function removeChildren(parentNode){
+  while (parentNode.hasChildNodes()){
+    parentNode.removeChild(parentNode.firstChild);
   }
 }
 
@@ -168,14 +165,14 @@ function getClickedObjectIndex(answer, displayedProducts){
   return index;
 }
 
-// TODO Doesn't work
 // to display list of clicked
-function displayList(){
-  console.log(products.length);
+function displayVoteList(){
+  resetArrays();
   var ul = document.createElement('ul');
   productListParent.appendChild(ul);
-  for(var i = 0; i <= products.length; i++){
+  for(var i = 0; i < products.length; i++){
     var li = document.createElement('li');
-    li.textContent = 'test';
+    li.textContent = products[i].clicked + ' votes for the ' + products[i].displayName;
+    ul.appendChild(li);
   }
 }
