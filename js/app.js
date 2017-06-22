@@ -18,8 +18,7 @@ var leftProduct;
 var centerProduct;
 var rightProduct;
 
-var numClicks = 0;
-var maxClick = 25;
+var maxClick = 24;
 
 var productImageParent = document.getElementById('productImage');
 
@@ -88,9 +87,9 @@ function eventListener(){
 
 
 function onClick(event) {
-  numClicks++;
-  console.log('numClicks: ' + numClicks);
-  if(numClicks >= maxClick){
+  // numClicks++;
+  // console.log('numClicks: ' + numClicks);
+  if(clickedProducts.length === maxClick){
     productImageParent.removeEventListener('click', onClick);
   }
   var answer = event.target.getAttribute('id');
