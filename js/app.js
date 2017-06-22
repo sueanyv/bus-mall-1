@@ -1,6 +1,7 @@
 'use strict';
 
 // TODO: Prevent consecutive duplication
+// TODO: have chart display all labels
 
 // VAR INIT =====
 
