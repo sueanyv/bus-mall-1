@@ -2,6 +2,7 @@
 
 // TODO: Prevent consecutive duplication
 // TODO: have chart display all labels
+// TODO: save to local storage to retain data
 
 // VAR INIT =====
 
@@ -182,7 +183,8 @@ function displayVoteList(){
   }
 }
 
-// modeled after CodeFellows Lecture Day 13
+// modeled after CodeFellows Lecture Day 12
+// add chart of data
 function chart() {
   var canvas = document.getElementById('chart');
   var ctx = canvas.getContext('2d');
@@ -220,4 +222,35 @@ function chart() {
       }
     }
   });
+}
+
+// this set of functions modeled after CodeFellows Lecture Day 13
+// add save to storage
+function getState() {
+  var storageState = localstorage.getItem('treestate');
+  var parsedState = JSON.parse(storageState);
+  return parsedState;
+}
+
+function createOrUpdateState(displayedProducts, clickedProducts){
+  var state = {
+    clickedProducts : products[i].clicked,
+    displayedProducts : products[i].displayed
+  };
+
+  var stringifiedState = JSON.stringify(state);
+  localStorage.setItem('clickedProducts', stringifiedState);
+  var storageState = localStorage.getItem('state');
+
+  var parsedState = JSON.parse(storageTreeState);
+  return parsedTreeState;
+}
+
+function deleteState() {
+  localStorage.removeItem('treeState');
+}
+
+function clearAllData() {
+  localStorage.clear();
+  return null;
 }
