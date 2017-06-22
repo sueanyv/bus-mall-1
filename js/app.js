@@ -1,6 +1,5 @@
 'use strict';
 
-// TODO: Turn off event listeners after 25 selections
 // TODO: display list of products with votes received
 // TODO: Prevent consecutive duplication
 
@@ -18,9 +17,11 @@ var leftProduct;
 var centerProduct;
 var rightProduct;
 
-var maxClick = 24;
+var numClick = 0;
+var maxClick = 25;
 
 var productImageParent = document.getElementById('productImage');
+var productListParent = document.getElementById('productList');
 
 // OBJECT CONSTRUCTOR =====
 function Product(displayName, path) {
@@ -70,6 +71,7 @@ var products = [
 // MAIN =====
 setup();
 eventListener();
+displayList();
 
 // FUNCTIONS =====
 function setup() {
@@ -87,11 +89,13 @@ function eventListener(){
 
 
 function onClick(event) {
-  // numClicks++;
-  // console.log('numClicks: ' + numClicks);
-  if(clickedProducts.length === maxClick){
+  numClick ++;
+  //TODO: "countClicked of undefined" error
+  if(numClick >= maxClick){
     productImageParent.removeEventListener('click', onClick);
+    displayList();
   }
+
   var answer = event.target.getAttribute('id');
   var index = getClickedObjectIndex(answer, displayedProducts);
   displayedProducts[index].countClicked();
@@ -162,4 +166,16 @@ function getClickedObjectIndex(answer, displayedProducts){
     }
   });
   return index;
+}
+
+// TODO Doesn't work
+// to display list of clicked
+function displayList(){
+  console.log(products.length);
+  var ul = document.createElement('ul');
+  productListParent.appendChild(ul);
+  for(var i = 0; i <= products.length; i++){
+    var li = document.createElement('li');
+    li.textContent = 'test';
+  }
 }
