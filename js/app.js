@@ -8,6 +8,9 @@
 var displayedProducts = [];
 // to track clicked products
 var clickedProducts = [];
+// to store chart data
+// collaborated with Don Pham
+var dataArray = [[],[],[]];
 
 // product objects
 var leftProduct;
@@ -100,6 +103,7 @@ function eventHandler(event) {
   if(maxClick <= numClick){
     productImageParent.removeEventListener('click', eventHandler, true);
     displayVoteList();
+    chart();
     return;
   }
 }
@@ -113,12 +117,12 @@ function render(productObj) {
   productImageParent.appendChild(image);
   switchToDisplayArray(productObj, displayedProducts, products);
   // DELETEME check functionality
-  for(var i = 0; i < displayedProducts.length; i++) {
-    console.log('Displayed: ' + displayedProducts[i].description);
-  }
-  for(i = 0; i < products.length; i++){
-    console.log('Products: ' + products[i].description);
-  }
+  // for(var i = 0; i < displayedProducts.length; i++) {
+  //   console.log('Displayed: ' + displayedProducts[i].description);
+  // }
+  // for(i = 0; i < products.length; i++){
+  //   console.log('Products: ' + products[i].description);
+  // }
 
 }
 
@@ -175,4 +179,44 @@ function displayVoteList(){
     li.textContent = products[i].clicked + ' votes for the ' + products[i].displayName;
     ul.appendChild(li);
   }
+}
+
+// modeled after CodeFellows Lecture Day 13
+function chart() {
+  var canvas = document.getElementById('chart');
+  var ctx = canvas.getContext('2d');
+
+  for(var i = 0; i < products.length; i++){
+    dataArray[0].push(products[i].displayName)
+    dataArray[1].push(products[i].clicked);
+  }
+
+  // displayedProducts.forEach(function(product){
+  //   data.push(product.clicked);
+  // });
+
+  console.log('test data array' + dataArray);
+  // modeled after the Getting Started example in the chartJS documentation
+  var chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: dataArray[0],
+      datasets: [{
+        label: 'Times Image Clicked',
+        backgroundColor: 'rgb(66, 244, 188)',
+        borderColor: 'rgb(66,244,188)',
+        //test data
+        data: dataArray[1],
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
 }
